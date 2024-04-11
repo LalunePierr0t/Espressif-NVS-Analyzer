@@ -441,6 +441,10 @@ def dump_nvs_data_csv(p_output_file_path: str):
                 else:
                     entry_data = entry_data.hex()
 
+                # if entry_data has has an odd number of characters, we need to add a leading 0
+                if len(entry_data) % 2 == 1:
+                    entry_data = "0" + entry_data
+
                 line = str(entry_key) + ",data,hex2bin," + entry_data
                 output_file.write(line + os.linesep)
 
