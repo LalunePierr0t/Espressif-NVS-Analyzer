@@ -78,8 +78,8 @@ Namespace phy
   cal_mac         : BLOB  AC 67 B2 2A F5 E4
   cal_version     : U32   4500
   ```
- 
-Fields are organized by NVS namespace. 
+
+Fields are organized by NVS namespace.
 
 Blobs will print their full length unless limited by the `-b` blob-limit option, which takes the maximum number of bytes to display.  An ellipsis `...` will be printed if the blob is larger than the limit.
 
@@ -93,14 +93,34 @@ Namespace nvs.net80211
   ap.ssid         : BLOB  esp32ap
   ap.passwd       : BLOB  12345678
   ...
-  
+
 D:\Users\AFont\Documents\Projects\softAP>analyze_nvs.py nvs_readout.bin
 Namespace nvs.net80211
   ...
   ap.ssid         : BLOB  07 00 00 00 65 73 70 33 32 61 70 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ap.passwd       : BLOB  31 32 33 34 35 36 37 38 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+  ap.passwd       : BLOB  31 32 33 34 35 36 37 38 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   ...
 ```
+
+CSV ouput is also available with the `-c` or `--csv` option.  This is useful for if you want to cusmoize your own nvs partition.
+`esp-idf` offers a way to generate nvs parttion with `csv` file. You can use this tool to generate the csv file.
+
+1. Generate the csv file using the following command
+```bash
+analyze_nvs.py nvs_readout.bin --csv output.csv
+```
+2. Do your own changes in the csv file. (Add, remove or modify the fields)
+3. Generate the binary file using the following command
+```bash
+python ${IDF_PATH}/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py generate output.csv data.bin 24576
+```
+Then you can write it to the flash using `esptool.py` or `idf.py` tools.
+
+4. Write the binary file to the flash using the following command
+```bash
+ esptool.py --port /dev/ttyUSB0 write_flash 0x9000 data.bin
+```
+
 
 # Known Limitations
 
